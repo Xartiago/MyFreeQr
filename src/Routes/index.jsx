@@ -1,11 +1,11 @@
 import { useRoutes } from 'react-router-dom'
+import { Auth } from '../Pages/Auth'
 
 export const AppRoutes = () => {
 
   const Routes = useRoutes([
-    { path: '/', element: }
+    { path: '/', element: <Auth /> },
   ])
 
-
-  return
+  return Routes
 }
