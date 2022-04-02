@@ -101,7 +101,7 @@ export const Auth = () => {
             )}
           </Formik>
           <div className='w-10/12 my-3'>
-            <button className={`${FlexRowCent} ${GoogleBttn}`} onClick={loginGoogle}><FaGoogle /> Ingresar con Gmail</button>
+            <button className={`${FlexRowCent} ${GoogleBttn}`} onClick={loginGoogle}><FaGoogle /> Ingresar con Google</button>
           </div>
         </div>
       </div>

@@ -40,6 +40,7 @@ export const logout = async () => {
     await signOut(auth)
   } catch (err) { console.log(err) }
 }
+/* Login with Google account */
 export const loginWithGoogle = async () => {
   const googleProvider = new GoogleAuthProvider()
   return signInWithPopup(auth, googleProvider)

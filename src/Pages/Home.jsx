@@ -1,5 +1,12 @@
+import { FlexCent } from "../Styles"
+import { Profile } from './Components/Profile'
+import { QrCode } from "./Components/QrCode"
+
 export const Home = () => {
   return (
-    <div>Home</div>
+    <div className={`${FlexCent}`}>
+      <Profile />
+      <QrCode />
+    </div>
   )
 }
