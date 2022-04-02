@@ -16,9 +16,16 @@ export const FormCont = `
   w-full p-2 py-6 /* Spacing */
   lg:w-10/12
   xl:w-8/12
-  bg-slate-800 rounded-xl
+  bg-slate-800 rounded-md shadow-md
 `
 export const RowGap = `
   w-10/12 
   sm:flex sm:flex-row gap-2
+`
+/* Google Button */
+export const GoogleBttn = `
+  py-1.5 gap-3 /* Spacing */
+  text-white font-bold /* Text */
+  bg-rose-600 rounded-lg /* Customizing */
+  hover:bg-rose-800 transition duration-700 /* Hover and Animations */
 `

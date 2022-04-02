@@ -9,11 +9,12 @@
 /* Component Container */
 export const CompCont = `
   p-4 /* Spacing */
-  w-full h-screen relative flex /* Width, Height, Position, Display */
+  w-full h-auto relative flex /* Width, Height, Position, Display */
   bg-slate-900 /* Background */
+  md:h-screen /* > 1024 */
 `
 /* Center flex Comp Cont */
-export const CompFlexCent =`
+export const CompFlexCent = `
   w-full flex flex-col relative /* Width Display Position */
   justify-center items-center /* Center */
   md:flex-row /* > 1024px */
@@ -42,11 +43,17 @@ export const Buttons = `
 `
 /* Labels */
 export const Label = `
-  w-full /* Spacing */
+  w-full mt-1.5 /* Spacing */
   text-white font-bold text-md /* Text */
 `
 /* Inputs */
 export const Input = `
-  my-1.5 py-2 px-3 rounded-md w-full /* Spacing */
+  my-1.5 py-1.5 px-3 rounded-md w-full /* Spacing */
   text-gray-900 /* Text */
+`
+/* Bigger title */
+export const BigTtle = `
+  text-indigo-400 text-xl font-bold 
+  md:text-2xl /* > 740px */
+  xl:text-3xl /* 1240px */
 `
