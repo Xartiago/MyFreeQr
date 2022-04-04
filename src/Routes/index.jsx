@@ -3,7 +3,7 @@ import { useRoutes } from 'react-router-dom'
 /* Pages */
 import { Auth } from '../Pages/Auth'
 import { Home } from '../Pages/Home'
-import { ProtectedRoute } from './protectedRoute'
+import { ProtectedRoute } from './ProtectedRoute'
 
 const protectedR = <ProtectedRoute><Auth /></ProtectedRoute>
 
