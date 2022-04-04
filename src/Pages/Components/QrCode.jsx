@@ -10,7 +10,8 @@ import { InputFile, SmallTxt } from "../../Styles/custom"
 import { FileInptCont, LoadAndCustomCont, MenuCont, QrContainer, StXMenu } from "../../Styles/qrcodectm"
 /* Custom hooks */
 import { useAccount } from '../../context/hooks/useAccount'
-import { createMenu, db, userMenus } from "../../Firebase/firestore"
+import { createMenu, userMenus } from "../../Firebase/firestore"
+import Gris from '../../assets/gris.jpg'
 
 export const QrCode = () => {
   /* Custom Hook */
@@ -19,10 +20,8 @@ export const QrCode = () => {
   const [menus, setMenus] = useState([])
   const [avlbMenus, setAvlbMenus] = useState(0)
   const [currentMenu, setCurrentMenu] = useState(1)
-  const [url, setUrl] = useState('')
   /* Update components when add a change */
   const [changes, setChanges] = useState(false)
-
   useEffect(() => {
     const getOrCreateMenu = async () => {
       const getMenus = await userMenus(account.uid)
@@ -63,8 +62,8 @@ export const QrCode = () => {
       {/* Menus & Account*/}
       <div className={`${MenuCont} ${FlexCent}`}>
         <div className={`${FlexCent}`}>
-          <img className={`rounded-full shadow-xl mb-2`} src={account ? account.photoURL : null} />
-          <span className={`text-lg text-blue-900 font-bold`}>{account ? account.displayName : null}</span>
+          <img className={`rounded-full shadow-xl mb-2`} src={account ? (account.photoURL ? account.photoURL : Gris): null} />
+          <span className={`text-lg text-blue-900 font-bold`}>{account ? (account.displayName ? account.displayName : 'Cuenta activa') : null}</span>
           <span className={`text-sm mb-4`}>({account && account.email})</span>
           {menus.map((menu, i) => {
             const { num, uid } = menu
@@ -78,7 +77,7 @@ export const QrCode = () => {
         {/* Load Files Cont */}
         <div className={`${FlexCent} pr-2 border-r`}>
           <h3 className={`${BigTtle}`}>1. Modifica tu menú</h3>
-          <p className={SmallTxt}>Carga imagenes o archivos (ya sea con formato .jpg, .pdf o .png) y modifica su orden, puedes cargar cuantas imagenes quieras para hacer el menu que se adecue a tu negocio</p>
+          <p className={SmallTxt}>Carga imagenes o archivos (ya sea con formato .jpg, .pdf o .png) o eliminalos, puedes cargar cuantas imagenes quieras para hacer el menu que se adecue a tu negocio</p>
           {/* Upload files form  */}
           <form className={`${FlexCent} h-40`} onSubmit={e => uploadFilesHandlerForm(e)}>
             <div className={`${FlexCent} ${FileInptCont}`}>
@@ -86,13 +85,13 @@ export const QrCode = () => {
             </div>
             <button className={`${Buttons}`} type='submit'>Agregar</button>
           </form>
-          <input type='text' onChange={e => setUrl(e.target.value)} />
         </div>
         {/* QR editor Cont */}
         <div className={FlexCent}>
           <h3 className={`${BigTtle}`}>2. Customiza tu codigo QR</h3>
           <p className={SmallTxt}>¡Agrega un estilo unico a tu codigo qr: puedes agregar colores, desvanecidos y cambiar muchas otras caracteristicas!</p>
-          <QR url={'url'} />
+
+          <QR url={menus.length > 0 && menus.find(menu => menu.num === currentMenu).url} />
         </div>
       </div>
     </div>
