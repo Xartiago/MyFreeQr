@@ -29,3 +29,14 @@ export const GoogleBttn = `
   bg-rose-600 rounded-lg /* Customizing */
   hover:bg-rose-800 transition duration-700 /* Hover and Animations */
 `
+/* Largest input file - tailwind-elements.com */
+export const InputFile = `
+  flex justify-center items-cemter
+  form-control px-3 py-1.5 text-base font-normal text-gray-700 rounded 
+`
+/* Small texts */
+export const SmallTxt = `
+  w-11/12 mt-2 mb-4 /* Spacing */
+  text-sm text-center /* Text */
+  lg:text-base
+`

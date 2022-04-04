@@ -13,8 +13,10 @@ import { AuthTtle, Brand, FormCont, GoogleBttn, RowGap } from "../Styles/custom"
 import { signinSchema, userSchema } from '../Schemas'
 import { loginWithGoogle, register, signin } from '../Firebase/auth'
 import { useNavigate } from 'react-router-dom'
+import { createMenu, userMenus } from '../Firebase/firestore'
 
 export const Auth = () => {
+
   /* Router */
   const navigate = useNavigate()
   /* Local States */
@@ -23,8 +25,14 @@ export const Auth = () => {
   if (authErrors) { setTimeout(() => { setAuthErrors(null) }, 3000); }
 
   const loginGoogle = async () => {
-    await loginWithGoogle()
-    navigate('/home')
+    const data = await loginWithGoogle()
+    const getMenus = await userMenus(data.user.uid)
+    if (getMenus.length === 0) {
+      const newMenu = await createMenu(data.user.uid, 1)
+      if (newMenu) navigate('/home')
+    } else {
+      navigate('/home')
+    }
   }
 
   return (
@@ -80,6 +88,7 @@ export const Auth = () => {
             onSubmit={async (values) => {
               const { email, password } = values
               const data = await signin(email, password)
+              console.log(data)
               if (data) navigate('/home')
               else setAuthErrors('Contraseña o correo invalidos')
             }}>
