@@ -7,7 +7,6 @@ export const DownloadBttn = `
 /* Tailwind premade */
 export const SelectTW = `
   form-select form-select-lg
-  appearance-none
   px-2
   py-1
   text-base

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 /* Libraries */
-import { ref, uploadBytesResumable } from "firebase/storage"
+import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage"
 import { storage } from "../../Firebase/storage"
 /* Another Components */
 import { QR } from './QR'
@@ -10,7 +10,7 @@ import { InputFile, SmallTxt } from "../../Styles/custom"
 import { FileInptCont, LoadAndCustomCont, MenuCont, QrContainer, StXMenu } from "../../Styles/qrcodectm"
 /* Custom hooks */
 import { useAccount } from '../../context/hooks/useAccount'
-import { createMenu, userMenus } from "../../Firebase/firestore"
+import { createMenu, db, userMenus } from "../../Firebase/firestore"
 
 export const QrCode = () => {
   /* Custom Hook */
@@ -19,6 +19,7 @@ export const QrCode = () => {
   const [menus, setMenus] = useState([])
   const [avlbMenus, setAvlbMenus] = useState(0)
   const [currentMenu, setCurrentMenu] = useState(1)
+  const [url, setUrl] = useState('')
   /* Update components when add a change */
   const [changes, setChanges] = useState(false)
 
@@ -49,11 +50,12 @@ export const QrCode = () => {
     /* Submit the file */
     const storageRef = ref(storage, `/files/${name}`)
     const uploadTask = await uploadBytesResumable(storageRef, file)
+    const getUrlReq = await getDownloadURL(ref(storage, `/files/${name}`))
   }
-  const uploadFilesHandlerForm = (event) => {
+  const uploadFilesHandlerForm = async (event) => {
     event.preventDefault()
     const file = event.target[0].files[0]
-    uploadFiles(file)
+    await uploadFiles(file)
   }
 
   return (
@@ -64,11 +66,11 @@ export const QrCode = () => {
           <img className={`rounded-full shadow-xl mb-2`} src={account ? account.photoURL : null} />
           <span className={`text-lg text-blue-900 font-bold`}>{account ? account.displayName : null}</span>
           <span className={`text-sm mb-4`}>({account && account.email})</span>
-          {menus.map((menu, i ) => {
+          {menus.map((menu, i) => {
             const { num, uid } = menu
-            return <span key={i} className={`${StXMenu} ${currentMenu === num && 'rounded bg-gray-200'}`} onClick={() => setCurrentMenu(num)}>Menu {num}</span>
+            return <span key={i} className={`${StXMenu} ${currentMenu === num && 'rounded bg-gray-200'} cursor-pointer`} onClick={() => setCurrentMenu(num)}>Menu {num}</span>
           })}
-          <button className={Buttons} onClick={handlerAddMenu}>Añadir menú</button>
+          {avlbMenus < 5 && <button className={Buttons} onClick={handlerAddMenu}>Añadir menú</button>}
         </div>
       </div>
       {/* Load Files & QR editor */}
@@ -84,12 +86,13 @@ export const QrCode = () => {
             </div>
             <button className={`${Buttons}`} type='submit'>Agregar</button>
           </form>
+          <input type='text' onChange={e => setUrl(e.target.value)} />
         </div>
         {/* QR editor Cont */}
         <div className={FlexCent}>
           <h3 className={`${BigTtle}`}>2. Customiza tu codigo QR</h3>
           <p className={SmallTxt}>¡Agrega un estilo unico a tu codigo qr: puedes agregar colores, desvanecidos y cambiar muchas otras caracteristicas!</p>
-          <QR url={'xartiago.vercel.app'} />
+          <QR url={'url'} />
         </div>
       </div>
     </div>
