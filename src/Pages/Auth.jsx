@@ -56,7 +56,13 @@ export const Auth = () => {
             onSubmit={async (values) => {
               const { email, password } = values
               const data = await register(email, password)
-              if (data) navigate('/home')
+              const getMenus = await userMenus(data.user.uid)
+              if (getMenus.length === 0) {
+                const newMenu = await createMenu(data.user.uid, 1)
+                if (newMenu) navigate('/home')
+              } else {
+                navigate('/home')
+              }
             }}>
             {({ errors, touched }) => (
               <Form className={`${FlexCent}`}>
@@ -88,9 +94,14 @@ export const Auth = () => {
             onSubmit={async (values) => {
               const { email, password } = values
               const data = await signin(email, password)
-              console.log(data)
-              if (data) navigate('/home')
-              else setAuthErrors('Contraseña o correo invalidos')
+              const getMenus = await userMenus(data.user.uid)
+              if (!data) setAuthErrors('Contraseña o correo invalidos')
+              if (getMenus.length === 0) {
+                const newMenu = await createMenu(data.user.uid, 1)
+                if (newMenu) navigate('/home')
+              } else {
+                navigate('/home')
+              }
             }}>
             {({ errors, touched }) => (
               <Form className={`${FlexCent}`}>

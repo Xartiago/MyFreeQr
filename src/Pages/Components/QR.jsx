@@ -6,14 +6,13 @@ import { DownloadBttn, SelectTW } from "../../Styles/Qr";
 export const QR = ({ url }) => {
   const [fileExt, setFileExt] = useState("png");
   /* Qr´s Styles sttes */
-
+  const [dots, setDots] = useState('rounded')
 
   const qrCode = new QRCodeStyling({
     width: 200,
     height: 200,
     dotsOptions: {
       color: "#4267b2",
-      type: "rounded"
     },
     imageOptions: {
       crossOrigin: "anonymous",
@@ -25,22 +24,19 @@ export const QR = ({ url }) => {
 
   useEffect(() => {
     qrCode.append(ref.current);
-  }, []);
+  }, [dots]);
 
   useEffect(() => {
     qrCode.update({
       data: url,
+      dotsOptions: { type: dots }
     });
-  }, [url]);
+  }, [dots]);
 
   const onExtensionChange = (event) => {
     setFileExt(event.target.value);
   };
-  const onDotsChange = ({ target: { value } }) => {
-    qrCode.update({
-      dotsOptions: { type: value }
-    })
-  }
+
   const onColorChange = ({ target: { value } }) => {
     qrCode.update({
       dotsOptions: { color: value }
@@ -72,7 +68,7 @@ export const QR = ({ url }) => {
         <div>
           {/* Dots options */}
           <h4 className="py-1">Tipo de puntos</h4>
-          <select onChange={onDotsChange} className={`${SelectTW} w-full`}>
+          <select onChange={e => setDots(e.target.value)} className={`${SelectTW} w-full`}>
             <option value="dots">Puntos</option>
             <option value="rounded">Redondeado</option>
             <option value="extra-rounded">Extra redondo</option>1
