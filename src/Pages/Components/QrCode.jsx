@@ -148,7 +148,7 @@ export const QrCode = () => {
         <div className={FlexCent}>
           <h3 className={`${BigTtle}`}>2. Customiza tu codigo QR</h3>
           <p className={SmallTxt}>¡Agrega un estilo unico a tu codigo qr: personaliza tu codigo como mas te guste!</p>
-          <QR url={menus.length > 0 && `/${menus[currentMenu - 1].url}`} />
+          <QR url={menus.length > 0 && `https://my-free-qr.vercel.app/${menus[currentMenu - 1].url}`} />
         </div>
       </div>
     </div>
