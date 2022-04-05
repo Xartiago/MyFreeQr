@@ -33,3 +33,13 @@ export const createMenu = async (uid, num) => {
     console.log(err)
   }
 }
+/* Get files in a specific Doc */
+export const getFilesDoc = async (url) => {
+  const q = query(MenusRef, where("url", "==", url))
+  const data = await getDocs(q)
+  let document = []
+  data.forEach((doc) => {
+    document.push(doc.data())
+  })
+  return document
+}
