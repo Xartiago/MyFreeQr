@@ -58,7 +58,6 @@ export const QR = ({ url }) => {
           <option value="png">PNG</option>
           <option value="jpeg">JPEG</option>
         </select>
-        {console.log(qrCode._options.data)}
         {qrCode._options.data && <button onClick={onDownloadClick} className={`${DownloadBttn} ml-2`}>Descargar</button>}
       </div>
       <div className='w-10/12 grid grid-cols-3 gap-2 my-5'>

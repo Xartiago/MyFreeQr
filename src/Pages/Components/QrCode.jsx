@@ -142,13 +142,13 @@ export const QrCode = () => {
               }
             </Droppable>
           </DragDropContext>
-          {menus.length > 0 && menus[currentMenu - 1].files.length > 0 && <Link target='_blank' to={`/qr/${menus[currentMenu - 1].url}`} className={`${Buttons} flex justify-center`}>¡Visitar Menu!</Link>}
+          {menus.length > 0 && menus[currentMenu - 1].files.length > 0 && <Link to={`/${menus[currentMenu - 1].url}`} className={`${Buttons} flex justify-center`}>¡Visitar Menu!</Link>}
         </div>
         {/* QR editor Cont */}
         <div className={FlexCent}>
           <h3 className={`${BigTtle}`}>2. Customiza tu codigo QR</h3>
           <p className={SmallTxt}>¡Agrega un estilo unico a tu codigo qr: personaliza tu codigo como mas te guste!</p>
-          <QR url={menus.length > 0 && `/qr/${menus.find(menu => menu.num === currentMenu).url}`} />
+          <QR url={menus.length > 0 && `/${menus[currentMenu - 1].url}`} />
         </div>
       </div>
     </div>
