@@ -2,6 +2,8 @@ import { useEffect, useState } from "react"
 /* Libraries */
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage"
 import { storage } from "../../Firebase/storage"
+import { arrayRemove, arrayUnion, doc, setDoc, updateDoc } from "firebase/firestore"
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 /* Another Components */
 import { QR } from './QR'
 /* Styles */
@@ -11,9 +13,10 @@ import { FileInptCont, LoadAndCustomCont, MenuCont, QrContainer, StXMenu } from 
 /* Custom hooks */
 import { useAccount } from '../../context/hooks/useAccount'
 import { createMenu, db, userMenus } from "../../Firebase/firestore"
+/* Icons o Assets */
 import Gris from '../../assets/gris.jpg'
-import { arrayRemove, arrayUnion, doc, setDoc, updateDoc } from "firebase/firestore"
 import { BsTrash, BsFillFilePdfFill } from 'react-icons/bs'
+import { Link } from "react-router-dom"
 
 export const QrCode = () => {
   /* Custom Hook */
@@ -22,6 +25,7 @@ export const QrCode = () => {
   const [menus, setMenus] = useState([])
   const [avlbMenus, setAvlbMenus] = useState(0)
   const [currentMenu, setCurrentMenu] = useState(1)
+  const [crMenFiles, setCrMenFiles] = useState([])
   /* Update components when add a change */
   const [changes, setChanges] = useState(false)
 
@@ -29,6 +33,7 @@ export const QrCode = () => {
     const getOrCreateMenu = async () => {
       const getMenus = await userMenus(account.uid)
       const sortMenus = getMenus.sort((pr, po) => pr.num - po.num)
+      setCrMenFiles(sortMenus[currentMenu - 1].files)
       setMenus([...sortMenus])
       setAvlbMenus(getMenus.length)
     }
@@ -103,27 +108,47 @@ export const QrCode = () => {
             <button className={`${Buttons}`} type='submit'>Agregar</button>
           </form>
           <h3 className={`${BigTtle} mt-3`}>Archivos del menu {currentMenu}</h3>
-          {
-            menus.length > 0 && menus[currentMenu - 1].files.map((file, i) => {
-              return <div className={`flex justify-between rounded px-4 py-3 border-2 border-indigo-200 w-full my-1`} key={i}>
-
-                <div>{
-                  file.split('.')[5].substring(0, 3) === 'pdf' ?
-                    <BsFillFilePdfFill className="text-red-800 "/>
-                    : <img src={file} className='w-6' />
-                }</div>
-                <span>Pagina {i + 1}</span>
-                <BsTrash className="cursor-pointer text-red-500 hover:text-red-900 hover:scale-x-110" onClick={() => onRemoveFiles(file)} />
+          <DragDropContext onDragEnd={async (result) => {
+            const { source, destination } = result
+            if (!destination) return
+            if (destination.index === source.index && source.droppableId === destination.droppableId) return
+            /* Change menu */
+            const sourceRef = crMenFiles[source.index]
+            const destinationRef = crMenFiles[destination.index]
+            const newMenu = crMenFiles
+            newMenu[source.index] = destinationRef
+            newMenu[destination.index] = sourceRef
+            const docRef = doc(db, 'menus', menus[currentMenu - 1].id)
+            await updateDoc(docRef, { files: newMenu })
+          }}>
+            <Droppable droppableId="files">
+              {(droppableProvided) => <div className="w-10/12" {...droppableProvided.droppableProps} ref={droppableProvided.innerRef}>
+                {menus.length > 0 && menus[currentMenu - 1].files.map((file, i) => {
+                  /* Drag and Drop Files */
+                  return <Draggable key={file} draggableId={file} index={i}>
+                    {(draggableProvided) => <div className={`flex justify-between rounded px-4 py-3 border-2 bg-white border-indigo-200 w-full my-1`} {...draggableProvided.draggableProps} ref={draggableProvided.innerRef} {...draggableProvided.dragHandleProps}>
+                      <div>{
+                        file.split('.')[5].substring(0, 3) === 'pdf' ?
+                          <BsFillFilePdfFill className="text-red-800 " />
+                          : <img src={file} className='w-6' />
+                      }</div>
+                      <span>Pagina {i + 1}</span>
+                      <BsTrash className="cursor-pointer text-red-500 hover:text-red-900 hover:scale-x-110" onClick={() => onRemoveFiles(file)} />
+                    </div>}
+                  </Draggable>
+                })}
+                {droppableProvided.placeholder}
               </div>
-            })
-          }
-          { menus.length > 0 && menus[currentMenu - 1].files.length > 0 && <button className={Buttons}>Obtener Qr</button>}
+              }
+            </Droppable>
+          </DragDropContext>
+          {menus.length > 0 && menus[currentMenu - 1].files.length > 0 && <Link target='_blank' to={`/qr/${menus[currentMenu - 1].url}`} className={`${Buttons} flex justify-center`}>¡Visitar Menu!</Link>}
         </div>
         {/* QR editor Cont */}
         <div className={FlexCent}>
           <h3 className={`${BigTtle}`}>2. Customiza tu codigo QR</h3>
           <p className={SmallTxt}>¡Agrega un estilo unico a tu codigo qr: personaliza tu codigo como mas te guste!</p>
-          <QR url={menus.length > 0 && menus.find(menu => menu.num === currentMenu).url} />
+          <QR url={menus.length > 0 && `/qr/${menus.find(menu => menu.num === currentMenu).url}`} />
         </div>
       </div>
     </div>

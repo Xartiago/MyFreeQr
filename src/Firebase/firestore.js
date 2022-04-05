@@ -24,8 +24,9 @@ export const createMenu = async (uid, num) => {
       files: [],
     })
     const menuId = newMenu.id
+    const newUrl = menuId + num
     if (menuId) {
-      await updateDoc(newMenu, { id: menuId })
+      await updateDoc(newMenu, { id: menuId, url: newUrl })
       return newMenu
     }
   } catch (err) {

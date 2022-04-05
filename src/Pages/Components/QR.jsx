@@ -12,6 +12,7 @@ export const QR = ({ url }) => {
 
 
   const qrCode = new QRCodeStyling({
+    data: url,
     width: 200,
     height: 200,
     dotsOptions: {
@@ -30,7 +31,7 @@ export const QR = ({ url }) => {
   }, [dots, color, bgColor, url]);
 
   useEffect(() => {
-    if(!url) url = 'https://xartiago.vercel.app/'
+    if (!url) url = 'https://xartiago.vercel.app/'
     qrCode.update({
       data: url,
       dotsOptions: { type: dots, color: color },
@@ -46,10 +47,7 @@ export const QR = ({ url }) => {
       extension: fileExt
     });
   };
-  const onSubmitImg = (e) => {
-    e.preventDefault()
-    console.log(e.target[0].files[0])
-  }
+
 
 
   return (
@@ -60,15 +58,16 @@ export const QR = ({ url }) => {
           <option value="png">PNG</option>
           <option value="jpeg">JPEG</option>
         </select>
-        <button onClick={onDownloadClick} className={`${DownloadBttn} ml-2`}>Descargar</button>
+        {console.log(qrCode._options.data)}
+        {qrCode._options.data && <button onClick={onDownloadClick} className={`${DownloadBttn} ml-2`}>Descargar</button>}
       </div>
       <div className='w-10/12 grid grid-cols-3 gap-2 my-5'>
         <div>
           {/* Dots options */}
           <h4 className="py-1">Tipo de puntos</h4>
           <select onChange={e => setDots(e.target.value)} className={`${SelectTW} w-full`}>
-            <option value="dots">Puntos</option>
             <option value="rounded" defaultValue>Redondeado</option>
+            <option value="dots">Puntos</option>
             <option value="extra-rounded">Extra redondo</option>1
             <option value="square">Cuadrado</option>1
             <option value="classy">Clasico</option>1
