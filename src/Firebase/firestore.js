@@ -1,4 +1,4 @@
-import { getFirestore, collection, query, where, getDocs, addDoc } from 'firebase/firestore'
+import { getFirestore, collection, query, where, getDocs, addDoc, updateDoc } from 'firebase/firestore'
 
 export const db = getFirestore()
 export const MenusRef = collection(db, 'menus')
@@ -17,13 +17,17 @@ export const userMenus = async (userUid) => {
 export const createMenu = async (uid, num) => {
   try {
     const newMenu = await addDoc(MenusRef, {
-      uid: uid + num,
+      id: '',
       user: uid,
       num,
-      url : '',
+      url: '',
       files: [],
     })
-    return newMenu
+    const menuId = newMenu.id
+    if (menuId) {
+      await updateDoc(newMenu, { id: menuId })
+      return newMenu
+    }
   } catch (err) {
     console.log(err)
   }
